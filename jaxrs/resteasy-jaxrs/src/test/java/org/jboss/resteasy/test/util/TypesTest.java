@@ -4,6 +4,7 @@ import org.jboss.resteasy.spi.StringConverter;
 import org.jboss.resteasy.util.Types;
 import org.junit.Test;
 
+import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.ExceptionMapper;
 import java.lang.reflect.Type;
 
@@ -35,5 +36,32 @@ public class TypesTest
       parameters = Types.getActualTypeArgumentsOfAnInterface(SimpleProviderSubclass.class, StringConverter.class);
       assertEquals(1, parameters.length);
       assertEquals(Integer.class, (Class<?>) parameters[0]);
+   }
+
+   @Test
+   public void testGetInterfaceArgumentFromAnonumous()
+   {
+      Object o = new ContextResolver<String>()
+      {
+         @Override
+         public String getContext(Class<?> type)
+         {
+            return "foo bar";
+         }
+
+
+      };
+      Type[] parameters = Types.getActualTypeArgumentsOfAnInterface(o.getClass(), ContextResolver.class);
+      assertEquals(1, parameters.length);
+      assertEquals(String.class, (Class<?>) parameters[0]);
+   }
+
+   @Test
+   public void testGetInterfaceArgumentFromLambda()
+   {
+      ContextResolver < String > o = type -> "foo bar";
+      Type[]parameters = Types.getActualTypeArgumentsOfAnInterface(o.getClass(), ContextResolver.class);
+      assertEquals(1, parameters.length);
+      assertEquals(String.class, (Class<?>) parameters[0]);
    }
 }

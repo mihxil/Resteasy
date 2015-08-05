@@ -5,6 +5,7 @@ import org.jboss.resteasy.spi.StringParameterUnmarshaller;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.ws.rs.ext.ContextResolver;
 import java.lang.annotation.Annotation;
 import java.sql.Date;
 
@@ -44,4 +45,28 @@ public class ResteasyProviderFactoryTest
 		}
 
 	}
+
+   @Test
+   public void testRegisterProvider() throws Exception
+   {
+      ResteasyProviderFactory factory = new ResteasyProviderFactory();
+      factory.register(new ContextResolver<String>()
+      {
+
+         @Override
+         public String getContext(Class<?> type)
+         {
+            return "foo bar";
+
+         }
+
+      });
+   }
+
+   @Test
+   public void testRegisterProviderAsLambda() throws Exception
+   {
+      ResteasyProviderFactory factory = new ResteasyProviderFactory();
+      factory.register((ContextResolver<String>) type -> "foo bar");
+   }
 }
