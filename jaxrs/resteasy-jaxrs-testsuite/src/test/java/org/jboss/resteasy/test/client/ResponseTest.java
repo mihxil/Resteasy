@@ -22,10 +22,10 @@ public class ResponseTest
    @Test
    public void getLastModifiedTest()
    {
-      Date date = Calendar.getInstance().getTime();
+      Date date = new Date(1455097347000L);
       Response response = Response.ok().lastModified(date).build();
       Date responseDate = response.getLastModified();
-      System.out.println(date);
+      System.out.println(date.getTime());
       System.out.println(responseDate);
       Assert.assertTrue(date.equals(responseDate));
    }
